@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/border"
+    android:layout_marginTop="10dp"
+    android:layout_marginStart="5dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/store_image"
+                android:layout_width="400dp"
+                android:layout_height="130dp"
+                android:src="@drawable/storeback"
+                android:scaleType="centerCrop">
+
+            </ImageView>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/store_name"
+                android:textSize="20sp"
+                android:textAllCaps="true"
+                android:textColor="#F44336"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SHOP NAME"
+                android:textAlignment="center">
+
+            </TextView>
+            </LinearLayout>
+
+
+
+<LinearLayout
+    android:layout_marginTop="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:src="@drawable/name">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/owner_name"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="Owner Name"
+        android:textSize="15dp"
+        android:textColor="#000"
+        android:layout_marginStart="7dp">
+
+    </TextView>
+
+    <ImageView
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:src="@drawable/timing"
+        >
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/fromtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00 AM"
+        android:textColor="#000"
+        android:textSize="15dp"
+        android:layout_marginStart="7dp"
+        >
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="to"
+        android:layout_marginStart="5dp"
+        android:textColor="#F44336"
+        android:textSize="15dp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/totime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00 PM"
+        android:textColor="#000"
+        android:textSize="15dp"
+        android:layout_marginStart="5dp">
+
+    </TextView>
+
+</LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:src="@drawable/address">
+
+            </ImageView>
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textColor="#000"
+                android:textSize="15dp"
+                android:layout_marginStart="7dp">
+
+            </TextView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
