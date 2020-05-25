@@ -1,12 +1,12 @@
 package com.example.bhiwandicomadmin;
 
 public class Stores {
-public String ShopName,OwnerName,fromTime,toTime,ShopAddress,image, OwnerPhone;
+    public String ShopName, OwnerName, fromTime, toTime, ShopAddress, image, OwnerPhone, Password;
 
     public Stores() {
     }
 
-    public Stores(String shopName, String ownerName, String fromTime, String toTime, String shopAddress, String image, String ownerPhone) {
+    public Stores(String shopName, String ownerName, String fromTime, String toTime, String shopAddress, String image, String ownerPhone, String password) {
         ShopName = shopName;
         OwnerName = ownerName;
         this.fromTime = fromTime;
@@ -14,6 +14,7 @@ public String ShopName,OwnerName,fromTime,toTime,ShopAddress,image, OwnerPhone;
         ShopAddress = shopAddress;
         this.image = image;
         OwnerPhone = ownerPhone;
+        Password = password;
     }
 
     public String getShopNamee() {
@@ -70,6 +71,14 @@ public String ShopName,OwnerName,fromTime,toTime,ShopAddress,image, OwnerPhone;
 
     public void setOwnerPhonee(String ownerPhone) {
         OwnerPhone = ownerPhone;
+    }
+
+    public String getPasswordd() {
+        return Password;
+    }
+
+    public void setPasswordd(String password) {
+        Password = password;
     }
 }
 

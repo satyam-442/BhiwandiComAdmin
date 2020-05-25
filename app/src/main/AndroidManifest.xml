@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditStoreActivity"></activity>
+        <activity android:name=".ModifyStoreActivity"></activity>
+        <activity android:name=".EditStoreActivity" />
         <activity android:name=".EditStores" />
         <activity android:name=".ViewStores" />
         <activity android:name=".RegisteredUser" />

@@ -3,14 +3,11 @@ package com.example.bhiwandicomadmin;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,22 +23,25 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
+public class ModifyStoreActivity extends AppCompatActivity {
 
-    // FirebaseAuth mAuth;
     DatabaseReference storeRef, adminRef;
-    String currentUserId, gender;
+    String currentUserId, gender, shopName;
     ProgressDialog loadingBar;
     TextInputLayout registerOwnerName, registerOwnerPhone, registerShopName, registerShopAddress, registerPassword;
     EditText selectFromTime, selectToTime;
@@ -61,9 +61,11 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_admin_store_to_database);
+        setContentView(R.layout.activity_modify_store);
 
         storeRef = FirebaseDatabase.getInstance().getReference().child("Store");
+        shopName = getIntent().getStringExtra("Shopname");
+
         adminRef = FirebaseDatabase.getInstance().getReference().child("Admins");
 
         storagePicRef = FirebaseStorage.getInstance().getReference().child("Store Logos");
@@ -74,16 +76,21 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
         registerShopName = findViewById(R.id.registerShopName);
         registerShopAddress = findViewById(R.id.registerShopAddress);
         registerPassword = findViewById(R.id.registerPassword);
-
-        myDialog = new Dialog(this);
-
         tapFromDailog = findViewById(R.id.tapFromDailog);
         selectFromTime = findViewById(R.id.selectFromTime);
+        tapToDailog = findViewById(R.id.tapToDailog);
+        selectToTime = findViewById(R.id.selectToTime);
+
+        setupProfileImage = findViewById(R.id.setupProfileImage);
+        setupSelectImage = findViewById(R.id.setupSelectImage);
+
+        getShopDetails(shopName);
+
         tapFromDailog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
-                        AddAdminStoreToDatabaseActivity.this,
+                        ModifyStoreActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -102,13 +109,11 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
             }
         });
 
-        tapToDailog = findViewById(R.id.tapToDailog);
-        selectToTime = findViewById(R.id.selectToTime);
         tapToDailog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
-                        AddAdminStoreToDatabaseActivity.this,
+                        ModifyStoreActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -127,27 +132,13 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
             }
         });
 
-        setupProfileImage = findViewById(R.id.setupProfileImage);
-        setupSelectImage = findViewById(R.id.setupSelectImage);
-        btnstore=findViewById(R.id.btn_stores);
-        viewusers=findViewById(R.id.View_users);
-
-        viewusers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(AddAdminStoreToDatabaseActivity.this, RegisteredUsersActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
         //CODE FOR SELECTION OF IMAGE
         setupSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CropImage.activity(imageUri)
                         .setAspectRatio(5, 2)
-                        .start(AddAdminStoreToDatabaseActivity.this);
+                        .start(ModifyStoreActivity.this);
             }
         });
 
@@ -156,6 +147,33 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SaveDetailsToDB();
+            }
+        });
+
+    }
+
+    private void getShopDetails(String shopName) {
+        storeRef.child(shopName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())
+                {
+                    Stores stores = dataSnapshot.getValue(Stores.class);
+
+                    registerOwnerName.getEditText().setText(stores.getOwnerNamee());
+                    registerShopName.getEditText().setText(stores.getShopNamee());
+                    registerOwnerPhone.getEditText().setText(stores.getOwnerPhonee());
+                    registerShopAddress.getEditText().setText(stores.getShopAddresss());
+                    registerPassword.getEditText().setText(stores.getPasswordd());
+                    selectFromTime.setText(stores.getFromTimee());
+                    selectToTime.setText(stores.getToTimee());
+                    Picasso.get().load(stores.getImagee()).into(setupProfileImage);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
@@ -170,7 +188,7 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
             setupProfileImage.setImageURI(imageUri);
         } else {
             Toast.makeText(this, "Error! Try again.", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(AddAdminStoreToDatabaseActivity.this, AddAdminStoreToDatabaseActivity.class));
+            startActivity(new Intent(ModifyStoreActivity.this, AddAdminStoreToDatabaseActivity.class));
             finish();
         }
     }
@@ -204,7 +222,8 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(toTime)) {
             Toast.makeText(this, "Select to time.", Toast.LENGTH_SHORT).show();
-        } else {
+        }
+        else {
             loadingBar.setMessage("please wait.");
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
@@ -227,10 +246,9 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
                             Uri downloadUrl = task.getResult();
                             myUrl = downloadUrl.toString();
 
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Store").child(shopname);
                             HashMap<String, Object> userMapImg = new HashMap<String, Object>();
                             userMapImg.put("image", myUrl);
-                            ref.updateChildren(userMapImg);
+                            storeRef.updateChildren(userMapImg);
                         }
                     }
                 });
@@ -250,80 +268,16 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
 
             //userMap.put("uid",currentUserId);
             /*userMap.put("image",myUrl);*/
-            storeRef.child(shopname).updateChildren(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            storeRef.child(shopName).updateChildren(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(AddAdminStoreToDatabaseActivity.this, "Data Updated!", Toast.LENGTH_SHORT).show();
-                        /*startActivity(new Intent(AddAdminStoreToDatabaseActivity.this,AddAdminStoreToDatabaseActivity.class));
-                        finish();
+                        Toast.makeText(ModifyStoreActivity.this, "Data Updated!", Toast.LENGTH_SHORT).show();
                         loadingBar.dismiss();
-                    }
-                    else
-                    {
-                        String msg = task.getException().getMessage();
-                        Toast.makeText(AddAdminStoreToDatabaseActivity.this, "Error! " + msg, Toast.LENGTH_SHORT).show();
-                        loadingBar.dismiss();
-                    }*/
-                        HashMap<String, Object> userMap = new HashMap<String, Object>();
-                        userMap.put("Name", name);
-                        userMap.put("Phone", phone);
-                        userMap.put("Password", password);
-                        userMap.put("ShopName", shopname);
-                        //userMap.put("uid",currentUserId);
-                        /*userMap.put("image",myUrl);*/
-                        adminRef.child(phone).updateChildren(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(AddAdminStoreToDatabaseActivity.this, "Data Updated!", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(AddAdminStoreToDatabaseActivity.this, AddAdminStoreToDatabaseActivity.class));
-                                    finish();
-                                    loadingBar.dismiss();
-                                } else {
-                                    String msg = task.getException().getMessage();
-                                    Toast.makeText(AddAdminStoreToDatabaseActivity.this, "Error! " + msg, Toast.LENGTH_SHORT).show();
-                                    loadingBar.dismiss();
-                                }
-                            }
-                        });
                     }
                 }
             });
         }
     }
-    public void Showpopup(View v) {
-        TextView txtclose;
-        CardView view,edit;
-        myDialog.setContentView(R.layout.custompopup);
-        txtclose =(TextView) myDialog.findViewById(R.id.txtclose);
-        txtclose.setText("X");
-
-        view=(CardView) myDialog.findViewById(R.id.view_stores);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(AddAdminStoreToDatabaseActivity.this,ViewStores.class);
-                startActivity(intent);
-            }
-        });
-        edit=(CardView)myDialog.findViewById(R.id.edit_stores);
-        /*edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(AddAdminStoreToDatabaseActivity.this,EditStoreActivity.class);
-                startActivity(intent);
-            }
-        });*/
-        txtclose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myDialog.dismiss();
-            }
-        });
-        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        myDialog.show();
-    }
-
 
 }

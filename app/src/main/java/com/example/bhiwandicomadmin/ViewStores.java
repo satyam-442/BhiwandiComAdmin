@@ -62,11 +62,10 @@ public class ViewStores extends AppCompatActivity {
     private void startListen() {
         Query query = FirebaseDatabase.getInstance().getReference().child("Store").limitToLast(50);
         FirebaseRecyclerOptions<Stores> options = new FirebaseRecyclerOptions.Builder<Stores>().setQuery(query, Stores.class).build();
-        FirebaseRecyclerAdapter<Stores, ViewStores.FeedbackViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Stores, ViewStores.FeedbackViewHolder>(options) {
+        FirebaseRecyclerAdapter<Stores, FeedbackViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Stores, ViewStores.FeedbackViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull ViewStores.FeedbackViewHolder holder, final int position, @NonNull final Stores model) {
+            protected void onBindViewHolder(@NonNull FeedbackViewHolder holder, final int position, @NonNull final Stores model) {
                 //final String PostKey = getRef(position).getKey();
-
                 holder.setShopNamee(model.getShopNamee());
                 holder.setOwnerNamee(model.getOwnerNamee());
                 holder.setFromTimee(model.getFromTimee());
@@ -88,7 +87,7 @@ public class ViewStores extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int i) {
                                 if (i == 0) {
-                                    Intent intent = new Intent(ViewStores.this, EditStoreActivity.class);
+                                    Intent intent = new Intent(ViewStores.this, ModifyStoreActivity.class);
                                     intent.putExtra("Shopname", model.getShopNamee());
                                     startActivity(intent);
                                 }
@@ -116,9 +115,9 @@ public class ViewStores extends AppCompatActivity {
 
             @NonNull
             @Override
-            public ViewStores.FeedbackViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+            public FeedbackViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stores_layout, parent, false);
-                ViewStores.FeedbackViewHolder holder = new ViewStores.FeedbackViewHolder(view);
+                FeedbackViewHolder holder = new FeedbackViewHolder(view);
                 return holder;
             }
         };

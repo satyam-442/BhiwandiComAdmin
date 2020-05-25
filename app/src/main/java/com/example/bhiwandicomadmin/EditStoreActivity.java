@@ -43,7 +43,7 @@ import java.util.HashMap;
 
 public class EditStoreActivity extends AppCompatActivity {
     DatabaseReference storeRef;
-    String Shopname;
+    String Shopname = "";
 
     ProgressDialog loadingBar;
     TextInputLayout registerOwnerName, registerOwnerPhone, registerShopName, registerShopAddress, registerPassword;
