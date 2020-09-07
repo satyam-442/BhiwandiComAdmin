@@ -307,6 +307,7 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         edit=(CardView)myDialog.findViewById(R.id.edit_stores);
         /*edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -324,6 +325,4 @@ public class AddAdminStoreToDatabaseActivity extends AppCompatActivity {
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
     }
-
-
 }

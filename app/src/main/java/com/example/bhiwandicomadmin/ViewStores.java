@@ -103,8 +103,27 @@ public class ViewStores extends AppCompatActivity {
                                         }
                                     });
                                 }
-                                if (i==2) {
-                                    Toast.makeText(ViewStores.this, "Coming soon...", Toast.LENGTH_SHORT).show();
+                                if (i == 2) {
+                                    /*Toast.makeText(ViewStores.this, "Coming soon...", Toast.LENGTH_SHORT).show();*/
+                                    CharSequence option[] = new CharSequence[]{
+                                            "New",
+                                            "tag",
+                                    };
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(ViewStores.this);
+                                    builder.setTitle("Select the Tag");
+                                    builder.setItems(option, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int i) {
+                                            if (i == 0) {
+                                                Toast.makeText(ViewStores.this, "Add a new tag!", Toast.LENGTH_SHORT).show();
+                                            }
+                                            if (i == 1) {
+                                                Toast.makeText(ViewStores.this, "Add default tag!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                    builder.show();
                                 }
                             }
                         });
